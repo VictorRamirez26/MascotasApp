@@ -12,6 +12,8 @@ import com.is2.MascotasApp.error.ErrorServiceException;
 import com.is2.MascotasApp.repositories.MascotaRepository;
 import com.is2.MascotasApp.repositories.VotoRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class VotoService {
 
@@ -19,7 +21,10 @@ public class VotoService {
 	private MascotaRepository mascotaRepository;
 	@Autowired
 	private VotoRepository votoRepository;
+	@Autowired
+	private NotificacionService notificacionService;
 	
+	@Transactional
 	public void votar(String idUsuario, String idMascota1, String idMascota2) throws ErrorServiceException {
 		
 		if (idMascota1.equals(idMascota2)) {
@@ -52,9 +57,11 @@ public class VotoService {
 		}
 		
 		votoRepository.save(voto);
+		notificacionService.enviar("Tu mascota ha sido votada", "Tinder de mascota", mascotaRepository.findById(idMascota2).get().getUsuario().getEmail());
 		
 	}
 	
+	@Transactional
 	public void responder(String idUsuario, String idVoto) throws ErrorServiceException  {
 		
 		Optional<Voto> respuesta = votoRepository.findById(idVoto);
@@ -63,6 +70,7 @@ public class VotoService {
 			Voto voto = respuesta.get();
 			if (voto.getMascota2().getUsuario().getId().equals(idUsuario)) {
 				voto.setRespuesta(new Date()); 
+				notificacionService.enviar("Tu voto fue correspondido", "Tinder de mascota", voto.getMascota1().getUsuario().getEmail());
 			} else {
 				throw new ErrorServiceException("No tiene permisos para realizar esta operación");
 			}

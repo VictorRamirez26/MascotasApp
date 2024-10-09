@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
@@ -33,4 +34,7 @@ public class Usuario {
 	private Date alta;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date baja;
+	
+	@OneToOne
+	private Foto foto;
 }
