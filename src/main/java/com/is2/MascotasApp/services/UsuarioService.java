@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.is2.MascotasApp.entities.Foto;
 import com.is2.MascotasApp.entities.Usuario;
+import com.is2.MascotasApp.entities.Zona;
 import com.is2.MascotasApp.error.ErrorServiceException;
 import com.is2.MascotasApp.repositories.UsuarioRepository;
 
@@ -34,42 +35,55 @@ public class UsuarioService implements UserDetailsService{
 	private FotoService fotoService;
 	
 	@Autowired
+	private ZonaService zonaService;
+	
+	@Autowired
 	private NotificacionService notificacionService;
 	
-	public void crear(String nombre, String apellido, String email, String clave, MultipartFile archivo) 
+	@Transactional
+	public void crear(String nombre, String apellido, String email, String clave1, String clave2,
+			MultipartFile archivo, String idZona) 
 			throws ErrorServiceException, IOException, Exception{
+
+		Zona zona = zonaService.buscarZonaPorId(idZona);
+		validar(nombre,apellido,email,clave1, clave2,zona);
 		
-		validar(nombre,apellido,email,clave);
-		
-		String claveEncriptada = new BCryptPasswordEncoder().encode(clave);
+		String claveEncriptada = new BCryptPasswordEncoder().encode(clave1);
 		
 		Usuario usuario = Usuario.builder().nombre(nombre).apellido(apellido)
-				.email(email).clave(claveEncriptada).alta(new Date()).build();
+				.email(email).clave(claveEncriptada).alta(new Date()).zona(zona).build();
 		
 		Foto foto = fotoService.guardar(archivo);
-		
 		usuario.setFoto(foto);
+		
 		usuarioRepository.save(usuario);
 		
-		notificacionService.enviar("Bienvenido al Tinder de mascota", "Tinder de mascota", usuario.getEmail());
+		//notificacionService.enviar("Bienvenido al Tinder de mascota", "Tinder de mascota", usuario.getEmail());
 		
 	}
 	
 	@Transactional
-	public void modificar(String id, String nombre, String apellido, String email, String clave, MultipartFile archivo) 
+	public void modificar(String id, String nombre, String apellido, String email, String clave1, String clave2,
+			MultipartFile archivo, String idZona) 
 			throws ErrorServiceException, IOException, Exception{
 		
 		Optional<Usuario> respuesta = usuarioRepository.findById(id);
 		
 		if (respuesta.isPresent()) {
 			
-			validar(nombre, apellido, email, clave);
+			Zona zona = zonaService.buscarZonaPorId(idZona);
+			
+			validar(nombre, apellido, email, clave1 , clave2,zona);
+			
 			Usuario usuario = respuesta.get();
 			usuario.setNombre(nombre);
 			usuario.setApellido(apellido);
 			usuario.setEmail(email);
-			String claveEncriptada = new BCryptPasswordEncoder().encode(clave);
+			usuario.setZona(zona);
+			
+			String claveEncriptada = new BCryptPasswordEncoder().encode(clave1);
 			usuario.setClave(claveEncriptada);
+			
 			Foto foto = fotoService.actualizar(usuario.getFoto().getId(), archivo);
 			usuario.setFoto(foto);
 			
@@ -96,26 +110,38 @@ public class UsuarioService implements UserDetailsService{
 		}
 	}
 	
-	private void validar(String nombre, String apellido, String email, String clave) throws ErrorServiceException{
+	private void validar(String nombre, String apellido, String email, String clave1, String clave2, Zona zona) throws ErrorServiceException{
 		
 		if (nombre == null || nombre.isEmpty()) {
-			throw new ErrorServiceException("Ingrese el nombre");
+			throw new ErrorServiceException("Ingrese el nombre.");
 		}
 		
 		if (apellido == null || apellido.isEmpty()) {
-			throw new ErrorServiceException("Ingrese el apellido");
+			throw new ErrorServiceException("Ingrese el apellido.");
 		}
 		
-		if (email == null || nombre.isEmpty()) {
-			throw new ErrorServiceException("Ingrese el email");
+		if (email == null || email.isEmpty()) {
+			throw new ErrorServiceException("Ingrese el email.");
 		}
 		
-		if (clave == null || clave.isEmpty()) {
-			throw new ErrorServiceException("Ingrese la clave");
+		if (zona == null) {
+			throw new ErrorServiceException("Ingrese la zona.");
 		}
 		
-		if (clave.length() <= 6) {
-			throw new ErrorServiceException("Su clave debe tener más de 6 dígitos");
+		if (clave1 == null || clave1.isEmpty()) {
+			throw new ErrorServiceException("Ingrese su clave.");
+		}
+		
+		if (clave1.length() <= 6) {
+			throw new ErrorServiceException("Su clave debe tener más de 6 dígitos.");
+		}
+		
+		if (clave2 == null || clave2.isEmpty()) {
+			throw new ErrorServiceException("Debe repetir su contraseña.");
+		}
+		
+		if (!clave1.equals(clave2)) {
+			throw new ErrorServiceException("Las contraseñas ingresadas deben ser iguales.");
 		}
 		
 	}

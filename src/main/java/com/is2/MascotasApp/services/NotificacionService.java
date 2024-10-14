@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class NotificacionService {
 
-	@Autowired
-	private JavaMailSender mailSender;
+	//@Autowired
+	//private JavaMailSender mailSender;
 	
 	@Async
 	public void enviar(String cuerpo, String titulo, String mail) {
@@ -20,7 +20,7 @@ public class NotificacionService {
 		mensaje.setSubject(titulo);
 		mensaje.setText(cuerpo);
 		
-		mailSender.send(mensaje);
+		//mailSender.send(mensaje);
 	}
 	
 }

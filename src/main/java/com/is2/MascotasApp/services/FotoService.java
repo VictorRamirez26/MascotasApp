@@ -20,7 +20,7 @@ public class FotoService {
 	private FotoRepository fotoRepository;
 
 	@Transactional
-	public Foto guardar(MultipartFile archivo) throws ErrorServiceException, IOException, Exception {
+	public Foto guardar(MultipartFile archivo) throws ErrorServiceException,IOException, Exception {
 		if (archivo != null) {
 			try {
 				Foto foto = Foto.builder().mime(archivo.getContentType()).nombre(archivo.getName())
@@ -33,7 +33,8 @@ public class FotoService {
 			}
 
 		} else {
-			throw new ErrorServiceException("Debe agregar una foto");
+			//throw new ErrorServiceException("Debe agregar una foto");
+			return null;
 		}
 	}
 	
@@ -58,7 +59,8 @@ public class FotoService {
 			}
 
 		} else {
-			throw new ErrorServiceException("Debe agregar una foto");
+			//throw new ErrorServiceException("Debe agregar una foto");
+			return null;
 		}
 	}
 }
