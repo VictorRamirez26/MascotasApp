@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.is2.MascotasApp.entities.Foto;
@@ -23,6 +25,7 @@ import com.is2.MascotasApp.entities.Zona;
 import com.is2.MascotasApp.error.ErrorServiceException;
 import com.is2.MascotasApp.repositories.UsuarioRepository;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -148,20 +151,34 @@ public class UsuarioService implements UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
+		
 		Usuario usuario = usuarioRepository.buscarUsuarioPorMail(mail);
+		
 		if(usuario != null) {
 			List<GrantedAuthority> permisos = new ArrayList<>();
 			
-			GrantedAuthority p1 = new SimpleGrantedAuthority("MODULO_FOTOS");
-			GrantedAuthority p2 = new SimpleGrantedAuthority("MODULO_MASCOTAS");
-			GrantedAuthority p3 = new SimpleGrantedAuthority("MODULO_VOTOS");
+			GrantedAuthority p1 = new SimpleGrantedAuthority("ROL_USUARIO_REGISTRADO");
+			//GrantedAuthority p2 = new SimpleGrantedAuthority("MODULO_MASCOTAS");
+			//GrantedAuthority p3 = new SimpleGrantedAuthority("MODULO_VOTOS");
 			
 			permisos.add(p1);
-			permisos.add(p2);
-			permisos.add(p3);
+			//permisos.add(p2);
+			//permisos.add(p3);
+			ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			HttpSession session = attr.getRequest().getSession(true);
+			session.setAttribute("usuarioSession", usuario);
 			
 			User user = new User(usuario.getEmail(), usuario.getClave(), permisos);
 			return user;
+		}
+		return null;
+	}
+	
+	public Usuario buscarUsuarioPorId(String id){
+		
+		Optional<Usuario> respuesta = usuarioRepository.findById(id);
+		if (respuesta.isPresent()) {
+			return respuesta.get();
 		}
 		return null;
 	}

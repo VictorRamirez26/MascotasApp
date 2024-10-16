@@ -31,7 +31,7 @@
 	    <div class="container">
 	      <h1 class="masthead-heading mb-0">Tinder de Mascota</h1>
 	      <h2 class="masthead-subheading mb-0">Encontrale pareja a tu choco.</h2>
-	      <a href="registro" class="btn btn-primary btn-xl rounded-pill mt-5">¡Registrate!</a>
+	      <a href="/public/registro" class="btn btn-primary btn-xl rounded-pill mt-5">¡Registrate!</a>
 	    </div>
 	  </div>
 	  <div class="bg-circle-1 bg-circle"></div>
@@ -97,9 +97,9 @@
 	<footer th:insert="~{fragments/footer :: pie-pagina}" class="py-5 bg-black"></footer>
 	
 	<!-- Bootstrap core JavaScript -->
-	  <script src="/vendor/jquery/jquery.min.js"></script>
-	  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 	
-	</body>
+</body>
 
 </html>

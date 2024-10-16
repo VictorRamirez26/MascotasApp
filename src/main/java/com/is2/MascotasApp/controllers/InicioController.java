@@ -16,8 +16,10 @@ import com.is2.MascotasApp.error.ErrorServiceException;
 import com.is2.MascotasApp.services.UsuarioService;
 import com.is2.MascotasApp.services.ZonaService;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
-@RequestMapping("/")
+@RequestMapping("/public")
 public class InicioController {
 	
 	@Autowired
@@ -26,22 +28,33 @@ public class InicioController {
 	@Autowired
 	private ZonaService zonaService;
 	
-	@GetMapping("/")
+	@GetMapping("")
 	public String index() {
-		return "index.html";
+		return "/public/index.html";
 	} 
 
 	@GetMapping("/registro")
 	public String registro(ModelMap model) {
 		List<Zona> zonas = zonaService.listarZonasActivas();
 		model.put("zonas", zonas);
-		return "registro.html";
+		return "/public/registro.html";
 	}
 	
 	@GetMapping("/login")
-	public String login() {
-		return "login.html";
+	public String login(@RequestParam(required = false) String error, ModelMap model) {
+		if (error != null) {
+			model.put("error", "Email y/o contraseña incorrectas");
+		}
+		return "/public/login.html";
 	}
+	
+    @GetMapping("/logout")
+    public String logout(ModelMap model, HttpSession session) {
+    	
+    	model.put("logout", "Se ha deslogeado correctamente");
+    	session.setAttribute("usuarioSession", null);
+    	return "/public/login.html";
+    }
 	
 	@PostMapping("/registro")
 	public String registrar(@RequestParam(value = "nombre") String nombre,
@@ -55,7 +68,7 @@ public class InicioController {
 		
 		try {
 			usuarioService.crear(nombre, apellido, email, clave1, clave2 , foto, idZona);
-			return "exito.html";
+			return "/public/exito.html";
 		}catch(ErrorServiceException e) {
 			model.put("error", e.getMessage());
 			model.put("nombre", nombre);
@@ -72,7 +85,7 @@ public class InicioController {
 			System.out.println("Error de sistema");
 		}
 		
-		return "registro.html";
+		return "/public/registro.html";
 	}
 	
 	

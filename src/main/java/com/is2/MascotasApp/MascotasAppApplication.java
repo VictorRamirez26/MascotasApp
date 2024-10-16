@@ -16,9 +16,5 @@ public class MascotasAppApplication {
 		SpringApplication.run(MascotasAppApplication.class, args);
 	}
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-		auth.userDetailsService(usuarioService).passwordEncoder(new BCryptPasswordEncoder());
-	}
 	
 }
