@@ -12,6 +12,6 @@ import com.is2.MascotasApp.entities.Mascota;
 @Repository
 public interface MascotaRepository extends JpaRepository<Mascota, String>{
 
-	@Query("SELECT m FROM Mascota m WHERE m.usuario.id = :id ")
-	public List<Mascota> buscarMascotaPorUsuario(@Param("id") String id);
+	@Query("SELECT m FROM Mascota m WHERE m.usuario.id = :id AND m.baja IS NULL")
+	public List<Mascota> listarMascotasActivasPorUsuario(@Param("id") String id);
 }

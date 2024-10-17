@@ -158,12 +158,9 @@ public class UsuarioService implements UserDetailsService{
 			List<GrantedAuthority> permisos = new ArrayList<>();
 			
 			GrantedAuthority p1 = new SimpleGrantedAuthority("ROL_USUARIO_REGISTRADO");
-			//GrantedAuthority p2 = new SimpleGrantedAuthority("MODULO_MASCOTAS");
-			//GrantedAuthority p3 = new SimpleGrantedAuthority("MODULO_VOTOS");
 			
 			permisos.add(p1);
-			//permisos.add(p2);
-			//permisos.add(p3);
+
 			ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 			HttpSession session = attr.getRequest().getSession(true);
 			session.setAttribute("usuarioSession", usuario);

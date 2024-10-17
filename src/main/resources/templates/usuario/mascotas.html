@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Mis Mascotas</title>
+
+  <!-- Bootstrap core CSS -->
+  <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link th:href="@{/css/one-page-wonder.min.css}" rel="stylesheet">
+
+  <!-- Estilo personalizado para footer fijo -->
+  <style>
+    html, body {
+      height: 100%; /* Asegura que el HTML y body ocupen el 100% del alto */
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    section {
+      flex-grow: 1; /* El contenido de la página crecerá para ocupar el espacio disponible */
+    }
+  </style>
+  
+</head>
+
+<body>
+
+
+	<!-- Navigation -->
+	<div th:insert="~{fragments/navbar-logged :: menu-principal}"></div>
+
+	<header>
+	    <h1 style="margin-top:80px; text-align: center;"> Mis Mascotas</h1>
+	</header>
+
+	<section>
+	  <div class="container">
+	    <div class="row align-items-center">
+	      <div class="col-lg-12 order-lg-12">
+	         <!-- 
+	         <a th:href="@{/mascota/debaja-mascotas}" class="btn btn-primary btn-x rounded-pill mt-5" style="float:right ; margin-bottom:5px ; padding: 14px">Mascotas Dadas de Baja</a>
+	          --> 
+	         <a th:href="@{/mascota/editar-perfil-mascota(accion=Crear)}" class="btn btn-primary btn-x rounded-pill mt-5" style="float:right ; margin-bottom:5px ; padding: 14px">¡Agrega una Mascota!</a>
+	      <br/>
+	         
+	         <table class="table table-light table-hover">
+	             <thead>
+	                 <tr class="bg-black text-white">
+	                     <th>Foto</th>
+	                     <th>Nombre</th>
+	                     <th>Sexo</th>
+	                     <th>Tipo</th>
+	                     <th>Acciones</th>
+	                     
+	                 </tr>
+	             </thead>
+				<tbody>
+				    <tr th:if="${#lists.isEmpty(mascotas)}">
+				        <td colspan="5" style="text-align: center;">Aún no tienes mascotas registradas.</td>
+				    </tr>
+				    <tr th:each="mascota : ${mascotas}">
+				        <td>
+				            <img th:if="${mascota.foto != null}" th:src="@{/foto/mascota/{id} (id=${mascota.id}) }" alt="" style="max-height: 60px; border-radius: 100%">
+				            <img th:if="${mascota.foto == null}" src="/img/m1.jpeg" alt="" style="max-height: 60px; border-radius: 100%">
+				        </td>
+				        <td th:text="${mascota.nombre}"></td>
+				        <td th:text="${mascota.sexo}"></td>
+				        <td th:text="${mascota.tipo}"></td>
+				        <td>
+				            <a th:href="@{/mascota/editar-perfil-mascota(id=__${mascota.id}__,accion=Actualizar)}">Editar</a> -
+				            <a th:href="@{/mascota/editar-perfil-mascota(id=__${mascota.id}__,accion=Eliminar)}">Eliminar</a>
+				        </td>
+				    </tr>
+				</tbody>
+       
+	          </table>
+	          
+	      </div>
+	    </div>
+	  </div>
+	</section>
+
+
+	<footer th:insert="~{fragments/footer :: pie-pagina}" class="py-5 bg-black"></footer>
+
+	<!-- Bootstrap core JavaScript -->
+	<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>

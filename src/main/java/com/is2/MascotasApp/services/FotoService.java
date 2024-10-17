@@ -21,7 +21,7 @@ public class FotoService {
 
 	@Transactional
 	public Foto guardar(MultipartFile archivo) throws ErrorServiceException,IOException, Exception {
-		if (archivo != null) {
+		if (archivo != null && !archivo.isEmpty()) {
 			try {
 				Foto foto = Foto.builder().mime(archivo.getContentType()).nombre(archivo.getName())
 						.contenido(archivo.getBytes()).build();
@@ -40,7 +40,7 @@ public class FotoService {
 	
 	@Transactional
 	public Foto actualizar(String idFoto, MultipartFile archivo) throws ErrorServiceException, Exception{
-		if (archivo != null) {
+		if (archivo != null && !archivo.isEmpty()) {
 			try {
 				Foto foto = Foto.builder().build();
 				if(idFoto != null) {

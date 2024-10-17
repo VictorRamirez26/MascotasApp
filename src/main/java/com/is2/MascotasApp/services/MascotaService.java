@@ -2,6 +2,7 @@ package com.is2.MascotasApp.services;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.is2.MascotasApp.entities.Foto;
 import com.is2.MascotasApp.entities.Mascota;
 import com.is2.MascotasApp.entities.Usuario;
 import com.is2.MascotasApp.enums.Sexo;
+import com.is2.MascotasApp.enums.Tipo;
 import com.is2.MascotasApp.error.ErrorServiceException;
 import com.is2.MascotasApp.repositories.MascotaRepository;
 import com.is2.MascotasApp.repositories.UsuarioRepository;
@@ -29,7 +31,7 @@ public class MascotaService {
 	private FotoService fotoService;
 	
 	@Transactional
-	public void crear(String idUsuario, String nombre, Sexo sexo, MultipartFile archivo) 
+	public void crear(String idUsuario, String nombre, Sexo sexo, Tipo tipo , MultipartFile archivo) 
 			throws ErrorServiceException, IOException, Exception{
 		
 		Optional<Usuario> respuesta = usuarioRepository.findById(idUsuario);
@@ -37,7 +39,7 @@ public class MascotaService {
 		if (respuesta.isPresent()) {
 			Usuario usuario = respuesta.get();
 			validar(nombre, sexo);
-			Mascota mascota = Mascota.builder().nombre(nombre).sexo(sexo)
+			Mascota mascota = Mascota.builder().nombre(nombre).sexo(sexo).tipo(tipo)
 					.alta(new Date()).usuario(usuario).build();
 			
 			Foto foto = fotoService.guardar(archivo);
@@ -51,7 +53,7 @@ public class MascotaService {
 	}
 	
 	@Transactional
-	public void modificar(String idMascota, String idUsuario, String nombre, Sexo sexo, MultipartFile archivo) 
+	public void modificar(String idMascota, String idUsuario, String nombre, Sexo sexo,Tipo tipo, MultipartFile archivo) 
 			throws ErrorServiceException, IOException, Exception{
 		Optional<Mascota> respuestaMascota = mascotaRepository.findById(idMascota);
 		if (respuestaMascota.isPresent()) {
@@ -61,6 +63,7 @@ public class MascotaService {
 			if (validarMascotaUsuario(mascota,idUsuario)) {
 				mascota.setNombre(nombre);
 				mascota.setSexo(sexo);
+				mascota.setTipo(tipo);
 				Foto foto = fotoService.actualizar(mascota.getFoto().getId(), archivo);
 				mascota.setFoto(foto);
 				
@@ -112,4 +115,21 @@ public class MascotaService {
 			throw new ErrorServiceException("Ingrese el sexo de la mascota");
 		}
 	}
+	
+	public List<Mascota> listarMascotasActivasPorUsuario(String idUsuario){
+		
+		return mascotaRepository.listarMascotasActivasPorUsuario(idUsuario);
+		
+	}
+	
+	public Mascota buscarMascotaPorId(String id) {
+		
+		Optional<Mascota> respuesta = mascotaRepository.findById(id);
+		if (respuesta.isPresent()) {
+			return respuesta.get();
+		}
+		return null;
+	}
+	
+	
 }

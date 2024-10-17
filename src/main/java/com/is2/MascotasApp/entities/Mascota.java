@@ -3,6 +3,7 @@ package com.is2.MascotasApp.entities;
 import java.util.Date;
 
 import com.is2.MascotasApp.enums.Sexo;
+import com.is2.MascotasApp.enums.Tipo;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,6 +33,10 @@ public class Mascota {
 	private String nombre;
 	@Enumerated(EnumType.STRING)
 	private Sexo sexo;
+	
+	@Enumerated(EnumType.STRING)
+	private Tipo tipo;
+	
 	@Temporal(TemporalType.TIME)
 	private Date alta;
 	@Temporal(TemporalType.TIME)

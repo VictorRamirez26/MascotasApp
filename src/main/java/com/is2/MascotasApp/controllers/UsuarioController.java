@@ -44,6 +44,7 @@ public class UsuarioController {
 		
 		Usuario login = (Usuario) session.getAttribute("usuarioSession");
 		if (login == null || !login.getId().equals(idUsuario)) {
+			model.put("error", "Debe registrarse con el usuario correcto para poder acceder");
 			return "/public/login.html";
 		}
 		

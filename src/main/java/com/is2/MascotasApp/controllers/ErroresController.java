@@ -50,12 +50,11 @@ public class ErroresController implements ErrorController{
 		errorPage.addObject("mensaje", errorMsg);
 		return errorPage;
 		
-		
 	}
 	
 	private int getErrorCode(HttpServletRequest httpRequest) {
 	    Map mapa = httpRequest.getParameterMap();
-	    System.out.println("El map es: "+mapa.keySet());
+	    
 	    for (Object key : mapa.keySet()) {
 	        String[] valores = (String[]) mapa.get(key);
 	        for (String valor : valores) {
@@ -69,7 +68,7 @@ public class ErroresController implements ErrorController{
 	        System.out.println(key + ": " + httpRequest.getAttribute(key));
 	    }
 	    
-	    return (Integer) httpRequest.getAttribute("javax.servlet.error.status_code");
+	    return (Integer) httpRequest.getAttribute("jakarta.servlet.error.status_code");
 
 	}
 
