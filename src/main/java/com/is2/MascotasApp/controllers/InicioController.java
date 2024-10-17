@@ -19,7 +19,7 @@ import com.is2.MascotasApp.services.ZonaService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/public")
+@RequestMapping("/")
 public class InicioController {
 	
 	@Autowired
@@ -48,13 +48,6 @@ public class InicioController {
 		return "/public/login.html";
 	}
 	
-    @GetMapping("/logout")
-    public String logout(ModelMap model, HttpSession session) {
-    	
-    	model.put("logout", "Se ha deslogeado correctamente");
-    	session.setAttribute("usuarioSession", null);
-    	return "/public/login.html";
-    }
 	
 	@PostMapping("/registro")
 	public String registrar(@RequestParam(value = "nombre") String nombre,

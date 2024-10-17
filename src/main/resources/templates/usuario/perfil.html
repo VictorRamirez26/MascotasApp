@@ -37,8 +37,8 @@
 
 	      <div class="col-lg-6 order-lg-2">
 	        <div class="p-5">
-	            <img th:if="${perfil.foto != null}" class="img-fluid rounded-circle" th:src="${'/foto/usuario/' + perfil.id}" alt="">
-	            <img th:if="${perfil.foto == null}" class="img-fluid rounded-circle" src="img/m1.jpeg" alt="">
+	            <img th:if="${perfil.foto != null}" class="img-fluid rounded-circle" th:src="@{/foto/usuario/{id} (id=${perfil.id}) }" alt="">
+	            <img th:if="${perfil.foto == null}" class="img-fluid rounded-circle" th:src="img/m1.jpeg" alt="">
 	        </div>
 	      </div>
 	      <div class="col-lg-6 order-lg-1">

@@ -96,7 +96,12 @@ public class UsuarioController {
 		return "/usuario/inicio.html";
 	}
 	
-	
+	@GetMapping("/logout")
+	public String logout(ModelMap model , HttpSession session) {
+    	model.put("logout", "Se ha deslogeado correctamente");
+    	session.setAttribute("usuarioSession", null);
+    	return "/public/login.html";
+	}
 	
 	
 }

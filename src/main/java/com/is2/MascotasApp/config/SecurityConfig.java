@@ -34,7 +34,7 @@ public class SecurityConfig {
 	            // Permito cualquier otra ruta
 	            .anyRequest().permitAll())
 	        .formLogin(formLogin -> formLogin
-	            .loginPage("/public/login")  // Pag de login personalizada
+	            .loginPage("/login")  // Pag de login personalizada
 	            .loginProcessingUrl("/loginCheck")  
 	            .usernameParameter("email")  
 	            .passwordParameter("password")  
@@ -42,7 +42,7 @@ public class SecurityConfig {
 	            .permitAll())
 	        .logout(logout -> logout
 	            .logoutUrl("/logout")  // URL para cerrar sesión
-	            .logoutSuccessUrl("/public/index")  // Redireccion cuando se deslogeo 
+	            .logoutSuccessUrl("/usuario/logout")  // Redireccion cuando se deslogeo 
 	            .permitAll())
 	        .build();
 	}
