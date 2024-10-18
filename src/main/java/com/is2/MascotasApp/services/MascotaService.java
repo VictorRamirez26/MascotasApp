@@ -29,107 +29,112 @@ public class MascotaService {
 	private UsuarioRepository usuarioRepository;
 	@Autowired
 	private FotoService fotoService;
-	
+
 	@Transactional
-	public void crear(String idUsuario, String nombre, Sexo sexo, Tipo tipo , MultipartFile archivo) 
-			throws ErrorServiceException, IOException, Exception{
-		
+	public void crear(String idUsuario, String nombre, Sexo sexo, Tipo tipo, MultipartFile archivo)
+			throws ErrorServiceException, IOException, Exception {
+
 		Optional<Usuario> respuesta = usuarioRepository.findById(idUsuario);
-		
+
 		if (respuesta.isPresent()) {
 			Usuario usuario = respuesta.get();
 			validar(nombre, sexo);
-			Mascota mascota = Mascota.builder().nombre(nombre).sexo(sexo).tipo(tipo)
-					.alta(new Date()).usuario(usuario).build();
-			
+			Mascota mascota = Mascota.builder().nombre(nombre).sexo(sexo).tipo(tipo).alta(new Date()).usuario(usuario)
+					.build();
+
 			Foto foto = fotoService.guardar(archivo);
 			mascota.setFoto(foto);
-			
+
 			mascotaRepository.save(mascota);
 		} else {
 			throw new ErrorServiceException("Debe seleccionar el usuario");
 		}
-		
+
 	}
-	
+
 	@Transactional
-	public void modificar(String idMascota, String idUsuario, String nombre, Sexo sexo,Tipo tipo, MultipartFile archivo) 
-			throws ErrorServiceException, IOException, Exception{
+	public void modificar(String idMascota, String idUsuario, String nombre, Sexo sexo, Tipo tipo,
+			MultipartFile archivo) throws ErrorServiceException, IOException, Exception {
 		Optional<Mascota> respuestaMascota = mascotaRepository.findById(idMascota);
 		if (respuestaMascota.isPresent()) {
 			Mascota mascota = respuestaMascota.get();
 			validar(nombre, sexo);
-			
-			if (validarMascotaUsuario(mascota,idUsuario)) {
+
+			if (validarMascotaUsuario(mascota, idUsuario)) {
 				mascota.setNombre(nombre);
 				mascota.setSexo(sexo);
 				mascota.setTipo(tipo);
-				Foto foto = fotoService.actualizar(mascota.getFoto().getId(), archivo);
+				Foto foto = new Foto();
+				if (mascota.getFoto() != null) {
+					foto = fotoService.actualizar(mascota.getFoto().getId(), archivo);
+				} else {
+					foto = fotoService.guardar(archivo);
+				}
 				mascota.setFoto(foto);
-				
-				mascotaRepository.save(mascota);		
-			}else {
+
+				mascotaRepository.save(mascota);
+			} else {
 				throw new ErrorServiceException("No tiene permisos para modificar esta mascota");
 			}
-						
+
 		} else {
 			throw new ErrorServiceException("Debe seleccionar una mascota");
 		}
-		
+
 	}
-	
+
 	@Transactional
 	public void eliminar(String idMascota, String idUsuario) throws ErrorServiceException {
-		
+
 		Optional<Mascota> respuesta = mascotaRepository.findById(idMascota);
 		if (respuesta.isPresent()) {
 			Mascota mascota = respuesta.get();
-			if (validarMascotaUsuario(mascota,idUsuario)) {				
+			if (validarMascotaUsuario(mascota, idUsuario)) {
 				mascota.setBaja(new Date());
 				mascotaRepository.save(mascota);
 			} else {
 				throw new ErrorServiceException("No tiene permisos para eliminar esta mascota");
 			}
-			
+
 		} else {
 			throw new ErrorServiceException("Debe seleccionar una mascota");
 		}
 	}
-	
-	// Verifico que el que realice la modificación o eliminación sea el dueño de la mascota
+
+	// Verifico que el que realice la modificación o eliminación sea el dueño de la
+	// mascota
 	private boolean validarMascotaUsuario(Mascota mascota, String idUsuario) {
-		
+
 		if (mascota.getUsuario().getId().equals(idUsuario)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	private void validar(String nombre, Sexo sexo) throws ErrorServiceException {
-		
+
 		if (nombre == null || nombre.isEmpty()) {
 			throw new ErrorServiceException("Ingrese el nombre de la mascota");
 		}
-		
+
 		if (sexo == null) {
 			throw new ErrorServiceException("Ingrese el sexo de la mascota");
 		}
 	}
-	
-	public List<Mascota> listarMascotasActivasPorUsuario(String idUsuario){
-		
+
+	public List<Mascota> listarMascotasActivasPorUsuario(String idUsuario) {
+
 		return mascotaRepository.listarMascotasActivasPorUsuario(idUsuario);
-		
+
 	}
-	
+
 	public Mascota buscarMascotaPorId(String id) {
-		
+
 		Optional<Mascota> respuesta = mascotaRepository.findById(id);
 		if (respuesta.isPresent()) {
 			return respuesta.get();
 		}
 		return null;
 	}
-	
-	
+
 }
