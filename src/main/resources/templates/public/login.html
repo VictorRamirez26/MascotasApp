@@ -45,7 +45,7 @@
       <div class="row align-items-center">
         <div class="col-lg-6 order-lg-2">
           <div class="p-5">
-            <img class="img-fluid rounded-circle" src="img/m2.jpg" alt="">
+            <img class="img-fluid rounded-circle" src="img/m2.jpg" alt=""/>
           </div>
         </div>
         <div class="col-lg-6 order-lg-1">
@@ -65,8 +65,12 @@
               <button type="submit" class="btn btn-primary">Ingresar</button>
             </form>
             <div class="mt-4 text-center">
+            	<!-- 
                 <h5><a th:href="@{/oauth2/authorization/google}">Iniciar sesión con Google</a></h5>
                 <h5><a th:href="@{/oauth2/authorization/github}">Iniciar sesión con GitHub</a></h5>
+            	 -->
+                <!-- Login Auth0 -->
+                <h5><a th:href="@{/oauth2/authorization/auth0}">Iniciar sesión con Auth0</a></h5>
             </div>
           </div>
         </div>

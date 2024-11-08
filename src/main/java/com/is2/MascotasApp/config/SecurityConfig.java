@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .permitAll())
             .oauth2Login(oauth2Login -> oauth2Login
                 .loginPage("/login")
-                .successHandler(successHandler)) // Manejo personalizado después del login con OAuth2
+                .successHandler(successHandler)) // Utiliza CustomSuccessHandler para redirigir en login con OAuth2/Auth0
             .build();
     }
 
