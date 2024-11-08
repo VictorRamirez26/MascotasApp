@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -148,6 +149,11 @@ public class UsuarioService implements UserDetailsService{
 		}
 		
 	}
+	
+	public Usuario buscarUsuarioPorEMail(String email) {
+	    return usuarioRepository.buscarUsuarioPorMail(email);
+	}
+
 
 	@Override
 	public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
@@ -169,6 +175,26 @@ public class UsuarioService implements UserDetailsService{
 			return user;
 		}
 		return null;
+	}
+	
+	public Usuario crearDesdeOAuth(DefaultOAuth2User oauth2User) {
+		
+		System.out.println("Entre a crearDesdeOAuth");
+	    String nombre = oauth2User.getAttribute("name");
+	    String email = oauth2User.getAttribute("email");
+
+	    // Aquí se asigna una contraseña genérica, ya que OAuth2 se encarga de la autenticación.
+	    String claveEncriptada = new BCryptPasswordEncoder().encode("passwordGenerica");
+
+	    Usuario usuario = Usuario.builder()
+	            .nombre(nombre)
+	            .email(email)
+	            .clave(claveEncriptada)  // Contraseña genérica
+	            .alta(new Date())
+	            .build();
+
+	    usuarioRepository.save(usuario);  // Guarda el usuario en la base de datos
+	    return usuario;
 	}
 	
 	public Usuario buscarUsuarioPorId(String id){

@@ -31,7 +31,7 @@
 		<div class="masthead-content">
 		  <div class="container">
 		    <h1 class="masthead-heading mb-0">Bienvenido</h1>
-		     <h2 class="masthead-subheading mb-0" th:if="${session.usuarioSession != null}" th:text="${session.usuarioSession.nombre + ' ' + session.usuarioSession.apellido}"></h2> 
+		     <h2 class="masthead-subheading mb-0" th:if="${session.usuarioSession != null}" th:text="${session.usuarioSession.nombre}"></h2> 
 		    <a th:href="@{/usuario/editar-perfil/{id} (id=${session.usuarioSession.id}) }" class="btn btn-primary btn-xl rounded-pill mt-5">¡Configura tu Perfil!</a>
 
 		    <a th:href="@{/mascota/mis-mascotas}" class="btn btn-primary btn-xl rounded-pill mt-5">¡Mis Mascotas!</a>
